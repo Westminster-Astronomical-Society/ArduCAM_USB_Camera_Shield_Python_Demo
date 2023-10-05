@@ -1,3 +1,8 @@
+""" Provides a command line interface for Arducam cameras.
+
+    Usage: python Arducam_Demo.py -f <path_to_configuration_file>
+"""
+
 import argparse
 import time
 import signal
@@ -7,7 +12,6 @@ from Arducam import *
 from ImageConvert import *
 
 exit_ = False
-
 
 def sigint_handler(signum, frame):
     global exit_
@@ -31,6 +35,7 @@ def display_fps(index):
 display_fps.start = time.time()
 display_fps.frame_count = 0
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--config-file', type=str, required=True, help='Specifies the configuration file.')
@@ -38,7 +43,6 @@ if __name__ == "__main__":
     parser.add_argument('--preview-width', type=int, required=False, default=-1, help='Set the display width')
     parser.add_argument('-n', '--nopreview', action='store_true', required=False, help='Disable preview windows.')
     
-
     args = parser.parse_args()
     config_file = args.config_file
     verbose = args.verbose
@@ -54,6 +58,9 @@ if __name__ == "__main__":
         camera.dumpDeviceInfo()
 
     camera.start()
+    
+    # Min and max values are set in the configuration file.
+    
     # camera.setCtrl("setFramerate", 2)
     # camera.setCtrl("setExposureTime", 20000)
     # camera.setCtrl("setAnalogueGain", 800)
