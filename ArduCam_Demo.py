@@ -90,7 +90,8 @@ if __name__ == "__main__":
         if key == ord('q'):
             exit_ = True
         elif key == ord('s'):
-            np.array(data, dtype=np.uint8).tofile("image.raw")
+            cv2.imwrite('image.tif', image)
+            # np.array(data, dtype=np.uint8).tofile("image.raw")
 
     camera.stop()
     camera.closeCamera()
