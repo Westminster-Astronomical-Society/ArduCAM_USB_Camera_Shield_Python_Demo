@@ -2,13 +2,14 @@
     Usage: python Arducam_Demo.py -f <path_to_configuration_file>
 """
 
+import os
 import argparse
 import time
 import signal
 import cv2
 
-from Arducam import ArducamCamera
-from ImageConvert import convert_image, save_image, histeq
+from arducam import ArducamCamera
+from image_convert import convert_image, histeq, save_image
 
 exit_ = False
 
@@ -40,13 +41,15 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--config-file', type=str, required=True, help='Specifies the configuration file.')
     parser.add_argument('-v', '--verbose', action='store_true', required=False, help='Output device information.')
     parser.add_argument('--preview-width', type=int, required=False, default=-1, help='Set the display width')
-    parser.add_argument('-n', '--nopreview', action='store_true', required=False, help='Disable preview windows.')
-    
+    parser.add_argument('-n', '--no-preview', action='store_true', required=False, help='Disable preview windows.')
+    parser.add_argument('-o', '--output-dir', type=str, default=os.getcwd(), help='Specifies the output dir.')
+
     args = parser.parse_args()
     config_file = args.config_file
     verbose = args.verbose
     preview_width = args.preview_width
-    no_preview = args.nopreview
+    no_preview = args.no_preview
+    path = args.output_dir
 
     camera = ArducamCamera()
 
@@ -94,7 +97,7 @@ if __name__ == "__main__":
         if key == ord('q'):
             exit_ = True
         elif key == ord('s'):
-            cv2.imwrite('image.tif', image)
+            save_image(path, image)
         if key == ord('e'):
             equalize ^= 1
 
