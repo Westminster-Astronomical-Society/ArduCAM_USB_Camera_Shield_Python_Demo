@@ -1,5 +1,4 @@
 """ Provides a command line interface for Arducam cameras.
-
     Usage: python Arducam_Demo.py -f <path_to_configuration_file>
 """
 
@@ -8,8 +7,8 @@ import time
 import signal
 import cv2
 
-from Arducam import *
-from ImageConvert import *
+from Arducam import ArducamCamera
+from ImageConvert import convert_image, save_image, histeq
 
 exit_ = False
 
@@ -61,11 +60,12 @@ if __name__ == "__main__":
     
     # Min and max values are set in the configuration file.
     
-    # camera.setCtrl("setFramerate", 2)
-    # camera.setCtrl("setExposureTime", 20000)
-    # camera.setCtrl("setAnalogueGain", 800)
+    # camera.setCtrl("setFramerate", 6000)
+    # camera.setCtrl("setExposureTime", 10000)
+    # camera.setCtrl("setGain", 800)
 
     scale_width = preview_width
+    equalize = True
 
     while not exit_:
         ret, data, cfg = camera.read()
@@ -81,17 +81,22 @@ if __name__ == "__main__":
             if scale_width != -1:
                 scale = scale_width / image.shape[1]
                 image = cv2.resize(image, None, fx=scale, fy=scale)
-
-            cv2.imshow("Arducam", image)
+            if equalize:
+                image_eq = histeq(image)
+                cv2.imshow("Arducam", image_eq)
+            else:
+                cv2.imshow("Arducam", image)
         else:
             print("timeout")
 
         key = cv2.waitKey(1)
+        
         if key == ord('q'):
             exit_ = True
         elif key == ord('s'):
             cv2.imwrite('image.tif', image)
-            # np.array(data, dtype=np.uint8).tofile("image.raw")
+        if key == ord('e'):
+            equalize ^= 1
 
     camera.stop()
     camera.closeCamera()
