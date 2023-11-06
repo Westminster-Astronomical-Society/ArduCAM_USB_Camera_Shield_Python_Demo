@@ -61,14 +61,15 @@ if __name__ == "__main__":
 
     camera.start()
     
-    # Min and max values are set in the configuration file.
+    # Min, max and default values are set in the configuration file.
     
-    # camera.setCtrl("setFramerate", 6000)
-    # camera.setCtrl("setExposureTime", 10000)
-    # camera.setCtrl("setGain", 800)
+    # camera.setCtrl("setFramerate", 6000)  # x0.001
+    # camera.setCtrl("setExposureTime", 10000)  # µsec
+    # camera.setCtrl("setGain", 800)  # use with IMX462
+    # camera.setCtrl("setAnalogueGain", 800) # use with IMX708
 
     scale_width = preview_width
-    equalize = True
+    equalize = False
 
     while not exit_:
         ret, data, cfg = camera.read()
